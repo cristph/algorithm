@@ -65,7 +65,7 @@ public class Main {
             array[i] = rd.nextInt(count);
         }
         Integer[] array_copy = Arrays.copyOf(array, count);
-        sort.hybridSort(array, 0, array.length - 1);
+        sort.improvedQuickSort(array, 0, array.length - 1);
         print(array);
         Arrays.sort(array_copy);
         print(array_copy);
@@ -76,9 +76,51 @@ public class Main {
         }
     }
 
+    public static void testMergeSort() {
+        int count = 10000;
+        Integer[] array = new Integer[count];
+        Random rd = new Random();
+        for (int i = 0; i < count; i++) {
+            array[i] = rd.nextInt(count);
+        }
+        Integer[] array_copy = Arrays.copyOf(array, count);
+        sort.improvedMergeSort(array, 0, array.length - 1);
+        print(array);
+        Arrays.sort(array_copy);
+        print(array_copy);
+        if (compare(array, array_copy)) {
+            System.out.println("MergeSort Success");
+        } else {
+            System.out.println("MergeSort Fail");
+        }
+    }
+
+    public static void testGetKthMin() {
+        int count = 100;
+        Integer[] array = new Integer[count];
+        Random rd = new Random();
+        for (int i = 0; i < count; i++) {
+            array[i] = rd.nextInt(count * 2);
+        }
+        Integer[] array_copy = Arrays.copyOf(array, count);
+        int k = rd.nextInt(count);
+        int kthMax1 = sort.getKthMin(array, 0, array.length - 1, k);
+        Arrays.sort(array_copy);
+        int kthMax2 = array_copy[k - 1];
+        if (kthMax1 == kthMax2) {
+            System.out.println("getKthMin Success");
+        } else {
+            System.out.println("getKthMin Fail");
+        }
+    }
+
     public static void main(String[] args) {
         testHeapSort();
         testInsertSort();
         testQuickSort();
+        testMergeSort();
+        for (int i = 0; i < 100; i++) {
+            testGetKthMin();
+        }
     }
 }

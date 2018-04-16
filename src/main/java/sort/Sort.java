@@ -1,6 +1,10 @@
 package sort;
 
-public class Sort<T extends Comparable<? super T>> {
+import search.Search;
+
+import java.util.Arrays;
+
+public class Sort<T extends Comparable<? super T>> implements Search<T> {
 
     /**
      * 堆排序
@@ -108,8 +112,57 @@ public class Sort<T extends Comparable<? super T>> {
         if (pivotPos + 1 < right) quickSort(array, pivotPos + 1, right);
     }
 
-    public void hybridSort(T[] array, int left, int right) {
+    public void improvedQuickSort(T[] array, int left, int right) {
         quickSort(array, left, right);
         insertSort(array, left, right);
     }
+
+
+    /**
+     * 归并排序
+     */
+    private void merge(T[] array, int left, int mid, int right) {
+        T[] copy = Arrays.copyOfRange(array, left, right + 1);
+        int i = 0, j = mid - left + 1, p = left;
+        while (i <= mid - left && j <= right - left) {
+            if (copy[i].compareTo(copy[j]) <= 0) array[p++] = copy[i++];
+            else array[p++] = copy[j++];
+        }
+        while (i <= mid - left) array[p++] = copy[i++];
+        while (j <= right - left) array[p++] = copy[j++];
+    }
+
+    public void mergeSort(T[] array, int left, int right) {
+        if (left >= right) return;
+        if (right - left <= M) return;
+        int mid = (left + right) / 2;
+        if (mid - left > 1) mergeSort(array, left, mid);
+        if (right - mid > 2) mergeSort(array, mid + 1, right);
+        merge(array, left, mid, right);
+    }
+
+    public void improvedMergeSort(T[] array, int left, int right) {
+        mergeSort(array, left, right);
+        insertSort(array, left, right);
+    }
+
+
+    /**
+     * 求第k小的数
+     */
+    @Override
+    public T getKthMin(T[] array, int left, int right, int k) {
+        if (left == right) return array[left];
+        int pivotPos = partition(array, left, right);
+        if (pivotPos - left >= k) {
+            return getKthMin(array, left, pivotPos - 1, k);
+        } else if (pivotPos - left + 1 == k) {
+            return array[pivotPos];
+        } else {
+            return getKthMin(array, pivotPos + 1, right, k - pivotPos + left - 1);
+        }
+    }
+
+
+
 }
